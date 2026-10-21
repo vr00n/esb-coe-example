@@ -1,0 +1,698 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A transparent, data-first planning center for electric school bus readiness in New York State.">
+  <title>NY Electric School Bus Readiness Center</title>
+  <style>
+    :root {
+      --ink: #172226;
+      --muted: #5e6b70;
+      --paper: #f7f5ef;
+      --white: #ffffff;
+      --line: #d9dedb;
+      --yellow: #ffc629;
+      --yellow-soft: #fff4c8;
+      --green: #0b755d;
+      --green-soft: #dff5ed;
+      --blue: #176b87;
+      --blue-soft: #e4f4f8;
+      --orange: #d65d2e;
+      --orange-soft: #fbe8de;
+      --red: #aa2d35;
+      --red-soft: #f8e1e3;
+      --shadow: 0 18px 50px rgba(23, 34, 38, 0.10);
+      --radius: 22px;
+      --max: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.5;
+    }
+    button, input { font: inherit; }
+    a { color: inherit; }
+    .wrap { width: min(var(--max), calc(100% - 40px)); margin: 0 auto; }
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--green);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 840px; margin-bottom: 20px; font-size: clamp(2.6rem, 6.2vw, 5.7rem); line-height: .96; letter-spacing: -.065em; }
+    h2 { margin-bottom: 16px; font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1; letter-spacing: -.045em; }
+    h3 { margin-bottom: 8px; font-size: 1.15rem; line-height: 1.2; }
+    .lead { max-width: 720px; color: #324147; font-size: clamp(1.08rem, 2vw, 1.34rem); }
+    .muted { color: var(--muted); }
+    .small { font-size: .88rem; }
+    .mono { font-variant-numeric: tabular-nums; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(23, 34, 38, .12);
+      background: rgba(247, 245, 239, .92);
+      backdrop-filter: blur(12px);
+    }
+    .nav {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 850; letter-spacing: -.02em; }
+    .brand-mark { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; background: var(--yellow); }
+    .navlinks { display: flex; align-items: center; gap: 24px; }
+    .navlinks a { color: #405055; font-size: .92rem; font-weight: 700; text-decoration: none; }
+    .navlinks a:hover { color: var(--ink); }
+    .nav-cta, .button {
+      border: 0;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--white);
+      padding: 12px 18px;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+    .button:hover, .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(23,34,38,.17); }
+    .button.secondary { background: transparent; color: var(--ink); border: 1px solid var(--ink); }
+    .button.yellow { background: var(--yellow); color: var(--ink); }
+    .button.small-button { padding: 9px 14px; font-size: .88rem; }
+
+    .hero { padding: 90px 0 52px; overflow: hidden; }
+    .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: 64px; }
+    .hero-copy .lead { margin-bottom: 30px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+    .hero-note { margin: 24px 0 0; color: var(--muted); font-size: .9rem; }
+    .hero-visual {
+      position: relative;
+      min-height: 510px;
+      border-radius: 36px;
+      background: linear-gradient(155deg, #dceff3 0%, #f4fbfc 56%, #fff 56%);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .snowfield { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .hero-score {
+      position: absolute;
+      top: 28px;
+      right: 28px;
+      width: 190px;
+      border: 1px solid rgba(23,34,38,.1);
+      border-radius: 18px;
+      background: rgba(255,255,255,.92);
+      padding: 16px;
+      box-shadow: 0 10px 28px rgba(23,34,38,.12);
+    }
+    .hero-score strong { display: block; margin: 3px 0 5px; font-size: 1.22rem; color: var(--orange); }
+    .hero-score span { color: var(--muted); font-size: .78rem; }
+    .status-dots { display: flex; gap: 5px; margin-top: 12px; }
+    .status-dots i { display: block; width: 30%; height: 7px; border-radius: 99px; background: #dfe3e1; }
+    .status-dots i:first-child, .status-dots i:nth-child(2) { background: var(--orange); }
+
+    .principle-bar { padding: 22px 0; background: var(--ink); color: var(--white); }
+    .principle-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+    .principle { display: flex; gap: 11px; align-items: flex-start; font-size: .91rem; }
+    .principle b { display: block; margin-bottom: 2px; }
+    .principle span { color: #c9d1d2; }
+    .check { flex: 0 0 25px; width: 25px; height: 25px; display: grid; place-items: center; border-radius: 50%; background: var(--yellow); color: var(--ink); font-weight: 900; }
+
+    section { padding: 88px 0; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 40px; margin-bottom: 34px; }
+    .section-head p { max-width: 560px; margin: 0; color: var(--muted); }
+
+    .concern-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .concern-card {
+      min-height: 230px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.62);
+    }
+    .concern-card .icon { width: 48px; height: 48px; display: grid; place-items: center; margin-bottom: 28px; border-radius: 15px; background: var(--yellow-soft); font-size: 1.35rem; }
+    .concern-card p { margin-bottom: 0; color: var(--muted); }
+    .concern-card b { color: var(--ink); }
+
+    .assessment { background: var(--white); }
+    .assessment-shell { display: grid; grid-template-columns: minmax(0, .94fr) minmax(360px, .72fr); gap: 28px; align-items: start; }
+    .panel { border: 1px solid var(--line); border-radius: 28px; background: var(--white); box-shadow: 0 8px 30px rgba(23,34,38,.06); overflow: hidden; }
+    .panel-title { padding: 22px 24px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .panel-title h3 { margin: 0; }
+    .tag { display: inline-flex; align-items: center; gap: 7px; padding: 7px 10px; border-radius: 999px; background: var(--blue-soft); color: var(--blue); font-size: .76rem; font-weight: 850; letter-spacing: .03em; text-transform: uppercase; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; padding: 24px; }
+    label { display: block; color: #46555a; font-size: .82rem; font-weight: 750; }
+    .field-help { display: block; min-height: 32px; margin: 4px 0 7px; color: #788387; font-size: .72rem; line-height: 1.3; font-weight: 500; }
+    input[type="number"] {
+      width: 100%;
+      border: 1px solid #c7cfcc;
+      border-radius: 12px;
+      background: #fbfcfa;
+      color: var(--ink);
+      padding: 12px 13px;
+      font-weight: 750;
+      outline: none;
+    }
+    input[type="number"]:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(23,107,135,.12); }
+    .form-actions { display: flex; flex-wrap: wrap; gap: 10px; padding: 0 24px 24px; }
+    .result-panel { position: sticky; top: 96px; }
+    .result-top { padding: 26px; background: var(--orange-soft); border-bottom: 1px solid rgba(214,93,46,.18); }
+    .result-label { margin-bottom: 7px; color: var(--muted); font-size: .78rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+    .result-status { margin: 0; font-size: clamp(2rem, 4vw, 3.3rem); line-height: 1; letter-spacing: -.04em; color: var(--orange); }
+    .result-summary { margin: 12px 0 0; max-width: 470px; color: #4d3a32; }
+    .meter-wrap { padding: 24px 26px 10px; }
+    .meter-labels { display: flex; justify-content: space-between; margin-bottom: 9px; font-size: .77rem; color: var(--muted); }
+    .meter { height: 15px; border-radius: 999px; overflow: hidden; background: #e5e8e6; }
+    .meter-fill { width: 0%; height: 100%; border-radius: inherit; background: var(--orange); transition: width .5s ease, background .3s ease; }
+    .metrics { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; margin-top: 18px; background: var(--line); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .metric { padding: 18px 20px; background: var(--white); }
+    .metric span { display: block; color: var(--muted); font-size: .74rem; }
+    .metric strong { display: block; margin-top: 4px; font-size: 1.35rem; }
+    .recommendations { padding: 22px 26px 26px; }
+    .recommendations h3 { margin-bottom: 12px; }
+    .recommendations ul { margin: 0; padding-left: 20px; color: #46555a; }
+    .recommendations li + li { margin-top: 8px; }
+    details { margin: 0 24px 24px; border-top: 1px solid var(--line); padding-top: 15px; }
+    summary { cursor: pointer; font-weight: 800; }
+    details p { margin: 12px 0 0; color: var(--muted); font-size: .84rem; }
+
+    .evidence { background: #eef5f2; }
+    .evidence-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 24px; }
+    .chart-card, .profile-card { border-radius: 28px; background: var(--white); padding: 28px; box-shadow: 0 10px 34px rgba(23,34,38,.07); }
+    .chart-head { display: flex; justify-content: space-between; align-items: start; gap: 16px; margin-bottom: 20px; }
+    .legend { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: .76rem; }
+    .legend i { width: 18px; height: 4px; border-radius: 8px; background: var(--blue); }
+    .chart-frame { width: 100%; height: 270px; display: block; }
+    .chart-note { display: flex; gap: 9px; margin-top: 16px; padding: 13px 14px; border-radius: 13px; background: var(--yellow-soft); color: #5b4a13; font-size: .83rem; }
+    .profile-stat { display: grid; grid-template-columns: 1fr auto; gap: 14px; padding: 17px 0; border-bottom: 1px solid var(--line); }
+    .profile-stat:last-of-type { border-bottom: 0; }
+    .profile-stat span { color: var(--muted); }
+    .profile-stat strong { font-variant-numeric: tabular-nums; }
+    .profile-callout { margin-top: 20px; padding: 18px; border-radius: 16px; background: var(--orange-soft); }
+    .profile-callout b { display: block; margin-bottom: 4px; color: var(--orange); }
+
+    .planner-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 24px; }
+    .resilience-form { padding: 26px; border-radius: 28px; background: var(--ink); color: var(--white); }
+    .resilience-form .eyebrow { color: var(--yellow); }
+    .resilience-form p { color: #cbd2d3; }
+    .dark-fields { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin-top: 22px; }
+    .dark-fields label { color: #dce1e2; }
+    .dark-fields .field-help { color: #9fabad; min-height: 14px; }
+    .resilience-result { margin-top: 22px; padding: 20px; border: 1px solid rgba(255,255,255,.18); border-radius: 18px; background: rgba(255,255,255,.08); }
+    .resilience-result strong { display: block; color: var(--yellow); font-size: 2.4rem; letter-spacing: -.04em; }
+    .resilience-result span { color: #dce1e2; }
+    .response-list { display: grid; gap: 12px; }
+    .response-row { display: grid; grid-template-columns: 50px 1fr auto; align-items: center; gap: 15px; padding: 17px 18px; border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,.65); }
+    .response-row .num { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 13px; background: var(--yellow-soft); font-weight: 900; }
+    .response-row p { margin: 3px 0 0; color: var(--muted); font-size: .84rem; }
+    .response-row .state { color: var(--green); font-size: .74rem; font-weight: 850; text-transform: uppercase; }
+
+    .pathway { background: var(--yellow); }
+    .pathway h2 { max-width: 760px; }
+    .path-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 36px; }
+    .path-card { min-height: 270px; display: flex; flex-direction: column; padding: 22px; border: 1px solid rgba(23,34,38,.18); border-radius: 22px; background: rgba(255,255,255,.55); }
+    .path-number { color: rgba(23,34,38,.45); font-size: .82rem; font-weight: 900; }
+    .path-card h3 { margin-top: 36px; font-size: 1.35rem; }
+    .path-card p { color: #4e5148; }
+    .path-card a { margin-top: auto; font-weight: 850; text-underline-offset: 4px; }
+
+    .resources-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .resource { display: flex; flex-direction: column; min-height: 245px; padding: 24px; border: 1px solid var(--line); border-radius: 22px; background: var(--white); }
+    .resource-type { color: var(--blue); font-size: .75rem; font-weight: 850; letter-spacing: .08em; text-transform: uppercase; }
+    .resource h3 { margin-top: 28px; font-size: 1.3rem; }
+    .resource p { color: var(--muted); }
+    .resource button { align-self: flex-start; margin-top: auto; border: 0; background: none; padding: 0; color: var(--ink); font-weight: 850; cursor: pointer; text-decoration: underline; text-underline-offset: 4px; }
+
+    .cta { padding-top: 30px; }
+    .cta-box { display: grid; grid-template-columns: 1fr auto; gap: 30px; align-items: center; border-radius: 30px; background: var(--blue); color: var(--white); padding: 42px; }
+    .cta-box h2 { margin-bottom: 10px; }
+    .cta-box p { max-width: 660px; margin-bottom: 0; color: #dceff5; }
+    footer { padding: 52px 0; }
+    .footer-grid { display: flex; justify-content: space-between; gap: 30px; align-items: flex-start; }
+    .footer-grid p { max-width: 590px; color: var(--muted); font-size: .84rem; }
+
+    .toast { position: fixed; right: 22px; bottom: 22px; z-index: 30; max-width: 360px; padding: 14px 18px; border-radius: 14px; background: var(--ink); color: var(--white); box-shadow: var(--shadow); transform: translateY(120px); opacity: 0; transition: .25s ease; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    @media (max-width: 940px) {
+      .navlinks a:not(.nav-cta) { display: none; }
+      .hero-grid, .assessment-shell, .evidence-grid, .planner-grid { grid-template-columns: 1fr; }
+      .hero-visual { min-height: 440px; }
+      .principle-grid, .path-grid { grid-template-columns: repeat(2, 1fr); }
+      .concern-grid, .resources-grid { grid-template-columns: repeat(2, 1fr); }
+      .result-panel { position: static; }
+    }
+    @media (max-width: 640px) {
+      .wrap { width: min(100% - 26px, var(--max)); }
+      .topbar .nav { min-height: 64px; }
+      .brand span:last-child { display: none; }
+      .hero { padding-top: 62px; }
+      .hero-grid { gap: 36px; }
+      .hero-visual { min-height: 360px; border-radius: 24px; }
+      .hero-score { top: 16px; right: 16px; width: 165px; }
+      section { padding: 66px 0; }
+      .section-head { display: block; }
+      .section-head p { margin-top: 14px; }
+      .principle-grid, .concern-grid, .form-grid, .path-grid, .resources-grid, .dark-fields { grid-template-columns: 1fr; }
+      .principle-bar { padding: 28px 0; }
+      .concern-card { min-height: unset; }
+      .metrics { grid-template-columns: 1fr; }
+      .response-row { grid-template-columns: 44px 1fr; }
+      .response-row .state { grid-column: 2; }
+      .cta-box { grid-template-columns: 1fr; padding: 28px; }
+      .footer-grid { display: block; }
+    }
+    @media print {
+      .topbar, .hero, .principle-bar, #concerns, .evidence, .pathway, .resources, .cta, footer, .form-actions, details { display: none !important; }
+      body { background: #fff; }
+      .assessment { padding: 20px 0; }
+      .assessment-shell { grid-template-columns: 1fr 1fr; }
+      .result-panel { position: static; }
+      .panel { box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap nav">
+      <a class="brand" href="#top" aria-label="New York Electric School Bus Readiness Center home">
+        <span class="brand-mark" aria-hidden="true">NY</span>
+        <span>Electric School Bus Readiness Center</span>
+      </a>
+      <nav class="navlinks" aria-label="Primary navigation">
+        <a href="#concerns">Concerns</a>
+        <a href="#assessment">Test a route</a>
+        <a href="#resilience">Plan for outages</a>
+        <a class="nav-cta" href="#assessment">Start assessment</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow">Built for real New York conditions</p>
+          <h1>Will electric buses work here?</h1>
+          <p class="lead">Test your routes, winter conditions, depot capacity, outage risks and full costs. The answer may be ready, conditional—or not ready today.</p>
+          <div class="hero-actions">
+            <a class="button" href="#assessment">Test a winter route</a>
+            <a class="button secondary" href="#concerns">See how concerns are addressed</a>
+          </div>
+          <p class="hero-note">Planning support only. Results do not certify vehicle safety, regulatory compliance or route suitability.</p>
+        </div>
+        <div class="hero-visual" aria-label="Illustration of an electric school bus traveling through winter conditions">
+          <svg class="snowfield" viewBox="0 0 680 590" role="img" aria-labelledby="winterTitle winterDesc">
+            <title id="winterTitle">Electric school bus in a rural winter landscape</title>
+            <desc id="winterDesc">A yellow electric school bus travels through snow toward mountains and a wind farm.</desc>
+            <rect width="680" height="590" fill="transparent"/>
+            <circle cx="105" cy="92" r="47" fill="#fff4c8"/>
+            <path d="M0 315 120 205 205 290 305 168 455 310 560 220 680 335V590H0Z" fill="#c5dfe5"/>
+            <path d="M0 365 145 265 238 338 340 245 460 350 595 274 680 338V590H0Z" fill="#e3f0f1"/>
+            <path d="M0 400c120-52 226-42 330 1 120 50 233 45 350-7v196H0Z" fill="#fff"/>
+            <path d="M0 485c156-38 305-43 455-1 71 20 146 20 225 2v104H0Z" fill="#e9eef0"/>
+            <g opacity=".75" stroke="#176b87" stroke-width="4" fill="none">
+              <path d="M520 314v102"/><path d="m520 330-38-22"/><path d="m520 330 39-23"/><path d="m520 330 0-46"/>
+              <circle cx="520" cy="330" r="7" fill="#176b87"/>
+              <path d="M602 331v90"/><path d="m602 345-32-19"/><path d="m602 345 33-20"/><path d="m602 345 0-39"/>
+              <circle cx="602" cy="345" r="6" fill="#176b87"/>
+            </g>
+            <g transform="translate(92 338)">
+              <path d="M25 38h314c17 0 29 13 29 29v67H10V63c0-14 3-25 15-25Z" fill="#ffc629" stroke="#172226" stroke-width="5"/>
+              <path d="M37 0h205c32 0 59 14 77 38H25C26 17 29 0 37 0Z" fill="#ffc629" stroke="#172226" stroke-width="5"/>
+              <rect x="51" y="17" width="54" height="38" rx="4" fill="#cfe9ef" stroke="#172226" stroke-width="4"/>
+              <rect x="116" y="17" width="54" height="38" rx="4" fill="#cfe9ef" stroke="#172226" stroke-width="4"/>
+              <rect x="181" y="17" width="54" height="38" rx="4" fill="#cfe9ef" stroke="#172226" stroke-width="4"/>
+              <path d="M250 17h22c18 0 36 10 45 25v13h-67Z" fill="#cfe9ef" stroke="#172226" stroke-width="4"/>
+              <rect x="270" y="75" width="72" height="38" rx="8" fill="#fff4c8" stroke="#172226" stroke-width="4"/>
+              <text x="306" y="100" text-anchor="middle" font-size="18" font-weight="900" fill="#172226">ELECTRIC</text>
+              <circle cx="76" cy="137" r="29" fill="#172226"/><circle cx="76" cy="137" r="12" fill="#d9dedb"/>
+              <circle cx="301" cy="137" r="29" fill="#172226"/><circle cx="301" cy="137" r="12" fill="#d9dedb"/>
+              <path d="M10 117h358" stroke="#172226" stroke-width="5"/>
+              <path d="M29 76h18M29 90h18" stroke="#172226" stroke-width="4"/>
+            </g>
+            <g fill="#fff" opacity=".9">
+              <circle cx="58" cy="108" r="5"/><circle cx="156" cy="168" r="4"/><circle cx="257" cy="93" r="6"/><circle cx="405" cy="121" r="4"/><circle cx="584" cy="111" r="6"/><circle cx="638" cy="199" r="4"/><circle cx="82" cy="248" r="4"/><circle cx="420" cy="252" r="5"/>
+            </g>
+          </svg>
+          <div class="hero-score">
+            <span>Example 60-mile route</span>
+            <strong>Conditional</strong>
+            <span>at −5°F with preheating</span>
+            <div class="status-dots" aria-hidden="true"><i></i><i></i><i></i></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="principle-bar">
+      <div class="wrap principle-grid">
+        <div class="principle"><span class="check">✓</span><div><b>Local inputs</b><span>Your routes and temperatures</span></div></div>
+        <div class="principle"><span class="check">✓</span><div><b>Visible assumptions</b><span>No hidden range claims</span></div></div>
+        <div class="principle"><span class="check">✓</span><div><b>Failure planning</b><span>Outages and charger downtime</span></div></div>
+        <div class="principle"><span class="check">✓</span><div><b>Honest outcomes</b><span>Including “not ready”</span></div></div>
+      </div>
+    </div>
+
+    <section id="concerns">
+      <div class="wrap">
+        <div class="section-head">
+          <div><p class="eyebrow">You raised it. We test it.</p><h2>Operational concerns become planning inputs.</h2></div>
+          <p>A credible center of excellence should document constraints, quantify risk and show what would need to change—not dismiss lived experience.</p>
+        </div>
+        <div class="concern-grid">
+          <article class="concern-card"><div class="icon">❄</div><h3>Winter range</h3><p>Model cold-weather energy use, heating demand and <b>pre-departure conditioning</b> separately.</p></article>
+          <article class="concern-card"><div class="icon">◫</div><h3>Safe visibility</h3><p>Track defrost time and energy before a route begins. Safety requirements are treated as <b>fixed constraints</b>.</p></article>
+          <article class="concern-card"><div class="icon">↯</div><h3>Power outages</h3><p>Measure how long the fleet can operate and what combination of <b>backup power, spares or alternate service</b> is required.</p></article>
+          <article class="concern-card"><div class="icon">⌁</div><h3>Rural distance</h3><p>Screen every route rather than relying on a statewide average. Long routes can be marked <b>deferred</b>.</p></article>
+          <article class="concern-card"><div class="icon">$</div><h3>Full cost</h3><p>Include infrastructure, demand charges, charger maintenance, batteries and additional fleet redundancy.</p></article>
+          <article class="concern-card"><div class="icon">◷</div><h3>Long timelines</h3><p>Coordinate bus procurement, utility work, construction and training through a phased transition plan.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="assessment" id="assessment">
+      <div class="wrap">
+        <div class="section-head">
+          <div><p class="eyebrow">Interactive prototype</p><h2>Winter route readiness assessment</h2></div>
+          <p>Change the values below. Results update immediately and identify the assumption driving the outcome.</p>
+        </div>
+        <div class="assessment-shell">
+          <div class="panel">
+            <div class="panel-title"><h3>Route and vehicle inputs</h3><span class="tag">Northern district example</span></div>
+            <form id="routeForm" class="form-grid">
+              <label>Round-trip route miles<span class="field-help">Include deadhead and expected detours</span><input id="routeMiles" type="number" min="1" max="300" step="1" value="60"></label>
+              <label>Minimum temperature (°F)<span class="field-help">Use a planning design temperature</span><input id="temperature" type="number" min="-40" max="100" step="1" value="-5"></label>
+              <label>Usable battery capacity (kWh)<span class="field-help">Use usable—not advertised—capacity</span><input id="batteryKwh" type="number" min="20" max="800" step="1" value="210"></label>
+              <label>Baseline efficiency (kWh/mile)<span class="field-help">Observed mild-weather consumption</span><input id="baseEfficiency" type="number" min="0.5" max="8" step="0.1" value="1.7"></label>
+              <label>Departure state of charge (%)<span class="field-help">After charging, before preheating</span><input id="startSoc" type="number" min="1" max="100" step="1" value="100"></label>
+              <label>Preheating energy (kWh)<span class="field-help">Cabin, battery and windshield preparation</span><input id="preheatKwh" type="number" min="0" max="100" step="1" value="14"></label>
+              <label>Required return reserve (%)<span class="field-help">District-defined operating buffer</span><input id="reservePct" type="number" min="0" max="80" step="1" value="20"></label>
+              <label>Midday charging available (kWh)<span class="field-help">Enter zero when unavailable</span><input id="middayKwh" type="number" min="0" max="500" step="1" value="0"></label>
+            </form>
+            <div class="form-actions">
+              <button class="button small-button" type="button" id="northernExample">Load northern example</button>
+              <button class="button secondary small-button" type="button" id="mildExample">Compare a milder route</button>
+              <button class="button secondary small-button" type="button" id="printBrief">Print planning brief</button>
+            </div>
+            <details>
+              <summary>View prototype methodology</summary>
+              <p>The demo applies a temperature-based efficiency multiplier to the baseline efficiency, subtracts preheating energy, adds available midday charging and compares projected return energy with the selected reserve. “Ready” requires an additional 10-point margin above the reserve. Replace these illustrative factors with validated fleet data before operational use.</p>
+            </details>
+          </div>
+
+          <aside class="panel result-panel" aria-live="polite">
+            <div class="result-top" id="resultTop">
+              <div class="result-label">Screening result</div>
+              <h3 class="result-status" id="resultStatus">Conditional</h3>
+              <p class="result-summary" id="resultSummary">The route is projected to finish near the required reserve. Validate with controlled winter testing before assignment.</p>
+            </div>
+            <div class="meter-wrap">
+              <div class="meter-labels"><span>Projected return SOC</span><strong id="returnSocLabel">25%</strong></div>
+              <div class="meter"><div class="meter-fill" id="socMeter"></div></div>
+            </div>
+            <div class="metrics">
+              <div class="metric"><span>Winter efficiency</span><strong id="winterEfficiency">2.4 kWh/mi</strong></div>
+              <div class="metric"><span>Route energy</span><strong id="routeEnergy">144 kWh</strong></div>
+              <div class="metric"><span>Cold impact</span><strong id="coldImpact">+41%</strong></div>
+              <div class="metric"><span>Reserve margin</span><strong id="reserveMargin">+5 pts</strong></div>
+            </div>
+            <div class="recommendations"><h3>What the district should test next</h3><ul id="recommendationList"></ul></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="evidence" id="evidence">
+      <div class="wrap">
+        <div class="section-head">
+          <div><p class="eyebrow">Evidence, not averages</p><h2>Show the operating envelope.</h2></div>
+          <p>Every published claim should show temperature, distance, bus model, sample size and whether the result is observed or modeled.</p>
+        </div>
+        <div class="evidence-grid">
+          <article class="chart-card">
+            <div class="chart-head"><div><h3>Illustrative energy use by temperature</h3><p class="muted small">Prototype relationship—not measured district data</p></div><span class="legend"><i></i>kWh per mile</span></div>
+            <svg class="chart-frame" viewBox="0 0 700 300" role="img" aria-label="Illustrative chart showing energy use rising as temperature falls">
+              <g stroke="#d9dedb" stroke-width="1"><path d="M70 35V250H665"/><path d="M70 196H665"/><path d="M70 142H665"/><path d="M70 88H665"/><path d="M70 35H665"/></g>
+              <g fill="#6c797d" font-size="13"><text x="30" y="255">1.5</text><text x="30" y="201">2.0</text><text x="30" y="147">2.5</text><text x="30" y="93">3.0</text><text x="30" y="40">3.5</text><text x="75" y="278">50°F</text><text x="215" y="278">30°F</text><text x="360" y="278">10°F</text><text x="505" y="278">−10°F</text><text x="625" y="278">−25°F</text></g>
+              <path d="M85 226 C175 220 217 207 270 185 S390 146 445 118 S560 73 648 51" fill="none" stroke="#176b87" stroke-width="7" stroke-linecap="round"/>
+              <g fill="#176b87"><circle cx="85" cy="226" r="7"/><circle cx="270" cy="185" r="7"/><circle cx="445" cy="118" r="7"/><circle cx="648" cy="51" r="7"/></g>
+              <path d="M445 118V250" stroke="#d65d2e" stroke-width="2" stroke-dasharray="6 6"/><text x="456" y="108" fill="#d65d2e" font-size="13" font-weight="800">District test point</text>
+            </svg>
+            <div class="chart-note"><span>!</span><span>Use this chart format to publish actual district telemetry while preserving vehicle and route privacy.</span></div>
+          </article>
+          <aside class="profile-card">
+            <p class="eyebrow">Example district profile</p>
+            <h3>Northern rural operating conditions</h3>
+            <div class="profile-stat"><span>Fleet</span><strong>50 buses</strong></div>
+            <div class="profile-stat"><span>Electric buses operating</span><strong>2 buses</strong></div>
+            <div class="profile-stat"><span>Typical long route</span><strong>60 miles</strong></div>
+            <div class="profile-stat"><span>Winter temperatures</span><strong>At or below 0°F</strong></div>
+            <div class="profile-stat"><span>Observed outage</span><strong>Multiple days</strong></div>
+            <div class="profile-callout"><b>Decision standard</b><span>Do not assign a route unless visibility, reserve energy, charging availability and recovery procedures all meet district requirements.</span></div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="resilience">
+      <div class="wrap">
+        <div class="section-head">
+          <div><p class="eyebrow">Failure and recovery</p><h2>Plan for the day the power stays out.</h2></div>
+          <p>Resilience planning should cover the energy deficit, charger redundancy, restoration testing and continuity of student transportation.</p>
+        </div>
+        <div class="planner-grid">
+          <div class="resilience-form">
+            <p class="eyebrow">Outage exposure calculator</p>
+            <h3>How much fleet energy is at risk?</h3>
+            <p>This rough screen estimates the energy normally required during an outage window.</p>
+            <div class="dark-fields">
+              <label>Electric buses<span class="field-help">Vehicles depending on depot charging</span><input id="fleetSize" type="number" min="1" max="1000" value="50"></label>
+              <label>Outage duration (days)<span class="field-help">Expected severe event</span><input id="outageDays" type="number" min="1" max="30" value="3"></label>
+              <label>Daily energy per bus (kWh)<span class="field-help">Use observed winter value</span><input id="dailyEnergy" type="number" min="1" max="1000" value="85"></label>
+              <label>Backup energy available (kWh)<span class="field-help">BESS, generator or mobile source</span><input id="backupEnergy" type="number" min="0" max="1000000" value="2000"></label>
+            </div>
+            <div class="resilience-result"><span>Uncovered energy during outage</span><strong id="energyGap">10,750 kWh</strong><span id="coverageLabel">Backup covers 16% of estimated need.</span></div>
+          </div>
+          <div class="response-list">
+            <article class="response-row"><span class="num">01</span><div><h3>Maintain transportation continuity</h3><p>Define spare vehicles, mutual-aid agreements and route prioritization before an outage.</p></div><span class="state">Required</span></article>
+            <article class="response-row"><span class="num">02</span><div><h3>Design charging redundancy</h3><p>Avoid a single feeder, network or charger fault disabling the entire fleet.</p></div><span class="state">Model</span></article>
+            <article class="response-row"><span class="num">03</span><div><h3>Test restoration procedures</h3><p>Document safe restart, inspection, network recovery and manual charging procedures.</p></div><span class="state">Exercise</span></article>
+            <article class="response-row"><span class="num">04</span><div><h3>Report actual failures</h3><p>Publish outage duration, affected chargers, repair time and corrective action.</p></div><span class="state">Share</span></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pathway" id="pathway">
+      <div class="wrap">
+        <p class="eyebrow">A phased path—not a single deadline</p>
+        <h2>Move the routes that work. Document the routes that do not.</h2>
+        <div class="path-grid">
+          <article class="path-card"><span class="path-number">PHASE 01</span><h3>Measure</h3><p>Collect route, SOC, temperature, HVAC, downtime and charger data.</p><a href="#assessment">Use the screening tool</a></article>
+          <article class="path-card"><span class="path-number">PHASE 02</span><h3>Pilot</h3><p>Assign the strongest candidates and test them through a full winter.</p><a href="#evidence">Review evidence standards</a></article>
+          <article class="path-card"><span class="path-number">PHASE 03</span><h3>Harden</h3><p>Add charging redundancy, outage plans, workforce training and spare capacity.</p><a href="#resilience">Plan for failure</a></article>
+          <article class="path-card"><span class="path-number">PHASE 04</span><h3>Scale or defer</h3><p>Expand validated routes and document conditions preventing the remaining conversions.</p><a href="#resources">Build the evidence package</a></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="resources" id="resources">
+      <div class="wrap">
+        <div class="section-head"><div><p class="eyebrow">Practical resources</p><h2>Take the next useful action.</h2></div><p>Templates are designed for district planning and transparent discussion with boards, utilities and policymakers.</p></div>
+        <div class="resources-grid">
+          <article class="resource"><span class="resource-type">CSV template</span><h3>Winter performance log</h3><p>Track temperature, route distance, preheating, energy use, return SOC and operational exceptions.</p><button type="button" id="downloadCsv">Download template</button></article>
+          <article class="resource"><span class="resource-type">Planning brief</span><h3>Route readiness summary</h3><p>Create a printable record of the current inputs, result, energy margin and next tests.</p><button type="button" id="printResource">Print assessment</button></article>
+          <article class="resource"><span class="resource-type">Evidence package</span><h3>Documented constraints outline</h3><p>Organize route, climate, reliability, infrastructure and financial evidence for policy discussions.</p><button type="button" id="downloadOutline">Download outline</button></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap cta-box">
+        <div><h2>Start with the route that worries you most.</h2><p>Enter actual winter operating data, preserve the safety reserve and use the result to define the next test—not to force a predetermined answer.</p></div>
+        <a class="button yellow" href="#assessment">Test that route</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap footer-grid">
+      <a class="brand" href="#top"><span class="brand-mark">NY</span><span>Electric School Bus Readiness Center</span></a>
+      <p><strong>Prototype website.</strong> All calculator factors and charts are illustrative. A production version should use validated vehicle telemetry, OEM limits, utility studies, district safety procedures and current New York State guidance.</p>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const state = {
+      routeMiles: 60,
+      temperature: -5,
+      batteryKwh: 210,
+      baseEfficiency: 1.7,
+      startSoc: 100,
+      preheatKwh: 14,
+      reservePct: 20,
+      middayKwh: 0
+    };
+
+    const routeInputIds = Object.keys(state);
+    const byId = (id) => document.getElementById(id);
+
+    function clamp(value, min, max) {
+      return Math.min(max, Math.max(min, value));
+    }
+
+    function winterMultiplier(tempF) {
+      if (tempF >= 40) return 1;
+      if (tempF >= 20) return 1 + (40 - tempF) * 0.0075;
+      if (tempF >= 0) return 1.15 + (20 - tempF) * 0.01;
+      return 1.35 + Math.min(0.25, Math.abs(tempF) * 0.0125);
+    }
+
+    function readState() {
+      routeInputIds.forEach((key) => {
+        const parsedValue = Number(byId(key).value);
+        state[key] = Number.isFinite(parsedValue) ? parsedValue : 0;
+      });
+      console.debug("[RouteAssessment] input_state", structuredClone(state));
+    }
+
+    function calculateRoute() {
+      readState();
+      const multiplier = winterMultiplier(state.temperature);
+      const winterEfficiency = state.baseEfficiency * multiplier;
+      const departureEnergy = state.batteryKwh * clamp(state.startSoc, 0, 100) / 100;
+      const energyAvailable = Math.max(0, departureEnergy - state.preheatKwh + state.middayKwh);
+      const routeEnergy = state.routeMiles * winterEfficiency;
+      const returnEnergy = energyAvailable - routeEnergy;
+      const returnSoc = returnEnergy / state.batteryKwh * 100;
+      const reserveMargin = returnSoc - state.reservePct;
+      const coldImpact = (multiplier - 1) * 100;
+
+      let status = "Ready now";
+      let className = "ready";
+      let summary = "The modeled route finishes with at least ten percentage points above the required reserve.";
+      if (reserveMargin < 0) {
+        status = "Not ready today";
+        className = "not-ready";
+        summary = "The modeled route finishes below the district’s required reserve. Do not assign it without changing the vehicle, route or charging plan.";
+      } else if (reserveMargin < 10) {
+        status = "Conditional";
+        className = "conditional";
+        summary = "The route is projected to finish near the required reserve. Validate with controlled winter testing before assignment.";
+      }
+
+      const result = { multiplier, winterEfficiency, departureEnergy, energyAvailable, routeEnergy, returnEnergy, returnSoc, reserveMargin, coldImpact, status, className, summary };
+      console.debug("[RouteAssessment] calculated_result", structuredClone(result));
+      renderRouteResult(result);
+      return result;
+    }
+
+    function renderRouteResult(result) {
+      const palette = result.className === "ready"
+        ? { color: "#0b755d", soft: "#dff5ed" }
+        : result.className === "conditional"
+          ? { color: "#d65d2e", soft: "#fbe8de" }
+          : { color: "#aa2d35", soft: "#f8e1e3" };
+
+      byId("resultStatus").textContent = result.status;
+      byId("resultStatus").style.color = palette.color;
+      byId("resultSummary").textContent = result.summary;
+      byId("resultTop").style.background = palette.soft;
+      const displayedSoc = clamp(result.returnSoc, 0, 100);
+      byId("returnSocLabel").textContent = `${Math.round(result.returnSoc)}%`;
+      byId("socMeter").style.width = `${displayedSoc}%`;
+      byId("socMeter").style.background = palette.color;
+      byId("winterEfficiency").textContent = `${result.winterEfficiency.toFixed(2)} kWh/mi`;
+      byId("routeEnergy").textContent = `${Math.round(result.routeEnergy)} kWh`;
+      byId("coldImpact").textContent = `+${Math.round(result.coldImpact)}%`;
+      byId("reserveMargin").textContent = `${result.reserveMargin >= 0 ? "+" : ""}${Math.round(result.reserveMargin)} pts`;
+
+      const recommendations = [];
+      if (result.coldImpact >= 30) recommendations.push("Confirm the cold-weather factor using trip-level telemetry from the two operating electric buses.");
+      if (state.preheatKwh > 0) recommendations.push("Meter preheating separately and confirm the windshield is fully clear before departure.");
+      if (result.reserveMargin < 10) recommendations.push("Test a larger usable battery, midday charging or a shorter assignment while preserving the reserve.");
+      if (result.reserveMargin < 0) recommendations.push("Keep this route on a suitable alternate vehicle until the modeled deficit is resolved and field-validated.");
+      if (recommendations.length < 3) recommendations.push("Repeat the assessment at the district’s coldest planning temperature and with a full passenger load.");
+      byId("recommendationList").innerHTML = recommendations.map((item) => `<li>${item}</li>`).join("");
+    }
+
+    function setExample(values) {
+      Object.entries(values).forEach(([key, value]) => { byId(key).value = value; });
+      calculateRoute();
+    }
+
+    function calculateResilience() {
+      const fleetSize = Math.max(0, Number(byId("fleetSize").value) || 0);
+      const outageDays = Math.max(0, Number(byId("outageDays").value) || 0);
+      const dailyEnergy = Math.max(0, Number(byId("dailyEnergy").value) || 0);
+      const backupEnergy = Math.max(0, Number(byId("backupEnergy").value) || 0);
+      const totalNeed = fleetSize * outageDays * dailyEnergy;
+      const energyGap = Math.max(0, totalNeed - backupEnergy);
+      const coverage = totalNeed > 0 ? clamp(backupEnergy / totalNeed * 100, 0, 100) : 100;
+      console.debug("[ResiliencePlanner] calculated_state", { fleetSize, outageDays, dailyEnergy, backupEnergy, totalNeed, energyGap, coverage });
+      byId("energyGap").textContent = `${Math.round(energyGap).toLocaleString()} kWh`;
+      byId("coverageLabel").textContent = energyGap === 0
+        ? "Entered backup energy covers the estimated outage need. Validate power capacity and charger compatibility."
+        : `Backup covers ${Math.round(coverage)}% of estimated need.`;
+    }
+
+    function downloadFile(filename, content, type = "text/plain") {
+      const blob = new Blob([content], { type });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+      showToast(`${filename} downloaded.`);
+    }
+
+    function showToast(message) {
+      const toast = byId("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.clearTimeout(showToast.timeoutId);
+      showToast.timeoutId = window.setTimeout(() => toast.classList.remove("show"), 2600);
+    }
+
+    routeInputIds.forEach((id) => byId(id).addEventListener("input", calculateRoute));
+    ["fleetSize", "outageDays", "dailyEnergy", "backupEnergy"].forEach((id) => byId(id).addEventListener("input", calculateResilience));
+
+    byId("northernExample").addEventListener("click", () => setExample({ routeMiles: 60, temperature: -5, batteryKwh: 210, baseEfficiency: 1.7, startSoc: 100, preheatKwh: 14, reservePct: 20, middayKwh: 0 }));
+    byId("mildExample").addEventListener("click", () => setExample({ routeMiles: 38, temperature: 25, batteryKwh: 210, baseEfficiency: 1.7, startSoc: 100, preheatKwh: 6, reservePct: 20, middayKwh: 0 }));
+    byId("printBrief").addEventListener("click", () => window.print());
+    byId("printResource").addEventListener("click", () => { document.querySelector("#assessment").scrollIntoView(); setTimeout(() => window.print(), 250); });
+
+    byId("downloadCsv").addEventListener("click", () => {
+      const columns = ["date", "bus_id", "bus_model", "route_id", "temperature_f", "route_miles", "preheat_minutes", "preheat_kwh", "departure_soc_percent", "return_soc_percent", "trip_energy_kwh", "charger_id", "charger_uptime_percent", "operational_exception", "notes"];
+      const example = ["2026-01-15", "BUS-001", "", "ROUTE-001", "-5", "60", "45", "", "100", "", "", "CHARGER-001", "", "", ""];
+      downloadFile("ny-esb-winter-performance-template.csv", `${columns.join(",")}\n${example.join(",")}\n`, "text/csv");
+    });
+
+    byId("downloadOutline").addEventListener("click", () => {
+      const outline = `DOCUMENTED ELECTRIC SCHOOL BUS CONSTRAINTS — PLANNING OUTLINE\n\n1. District and Fleet Profile\n- Fleet size\n- Route geography and mileage\n- Available spare vehicles\n\n2. Climate Conditions\n- Planning design temperature\n- Snowfall and storm frequency\n- Documented winter performance\n\n3. Route Feasibility Evidence\n- Trip-level mileage, energy and SOC\n- Preheating and defrost requirements\n- Required return reserve\n- Routes not currently feasible\n\n4. Charging and Utility Infrastructure\n- Existing service capacity\n- Charger redundancy\n- Interconnection and upgrade timeline\n\n5. Outage and Recovery Experience\n- Outage duration\n- Charging systems affected\n- Restoration issues and repair time\n- Continuity plan\n\n6. Financial Impact\n- Vehicles, chargers and infrastructure\n- Demand charges and maintenance\n- Battery replacement assumptions\n- Additional fleet redundancy\n\n7. Phased Implementation Request\n- Routes ready now\n- Routes requiring mitigation\n- Routes proposed for deferral\n- Reassessment conditions and dates\n`;
+      downloadFile("documented-constraints-outline.txt", outline);
+    });
+
+    calculateRoute();
+    calculateResilience();
+  </script>
+</body>
+</html>
